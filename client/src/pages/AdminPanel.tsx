@@ -22,21 +22,21 @@ export default function AdminPanel() {
   const [isCreateTutorialOpen, setIsCreateTutorialOpen] = useState(false);
 
   // Fetch admin stats
-  const { data: stats, isLoading: statsLoading } = useQuery({
+  const { data: stats = {}, isLoading: statsLoading } = useQuery({
     queryKey: ["/api/admin/stats"],
     refetchInterval: 30000,
   });
 
   // Fetch all content for management
-  const { data: ebooks = [] } = useQuery({
+  const { data: ebooks = [] } = useQuery<any[]>({
     queryKey: ["/api/ebooks"],
   });
 
-  const { data: tutorials = [] } = useQuery({
+  const { data: tutorials = [] } = useQuery<any[]>({
     queryKey: ["/api/tutorials"],
   });
 
-  const { data: aiStrategies = [] } = useQuery({
+  const { data: aiStrategies = [] } = useQuery<any[]>({
     queryKey: ["/api/ai-strategies"],
   });
 

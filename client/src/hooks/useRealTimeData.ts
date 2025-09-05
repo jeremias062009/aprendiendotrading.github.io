@@ -26,12 +26,12 @@ export function useRealTimeData() {
   const { lastMessage } = useWebSocket('/ws');
 
   // Fetch initial market data
-  const { data: initialData } = useQuery({
+  const { data: initialData = [] } = useQuery<MarketDataPoint[]>({
     queryKey: ["/api/market-data"],
   });
 
   useEffect(() => {
-    if (initialData) {
+    if (initialData && Array.isArray(initialData)) {
       const dataMap: Record<string, MarketDataPoint> = {};
       initialData.forEach((item: any) => {
         dataMap[item.symbol] = {

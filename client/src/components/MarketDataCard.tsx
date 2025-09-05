@@ -16,7 +16,7 @@ interface MarketData {
 export default function MarketDataCard() {
   const [liveData, setLiveData] = useState<Record<string, any>>({});
   
-  const { data: marketData, isLoading } = useQuery({
+  const { data: marketData = [], isLoading } = useQuery<MarketData[]>({
     queryKey: ["/api/market-data"],
     refetchInterval: 30000, // Fallback: refetch every 30 seconds
   });

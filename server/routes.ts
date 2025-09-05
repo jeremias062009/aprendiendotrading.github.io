@@ -5,6 +5,7 @@ import { storage } from "./storage";
 import { insertEbookSchema, insertTutorialSchema, insertAIStrategySchema } from "@shared/schema";
 import { binanceWebSocketService } from "./services/binanceWebSocket";
 import { openRouterService } from "./services/openRouterAPI";
+import { marketDataService } from "./services/marketDataService";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Admin authentication
@@ -242,6 +243,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Initialize services
   binanceWebSocketService.initialize();
+  marketDataService.initialize();
   
   // Start AI analysis loop
   setInterval(async () => {

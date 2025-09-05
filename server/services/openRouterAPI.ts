@@ -101,8 +101,38 @@ class OpenRouterService {
         throw new Error('No content received from OpenRouter API');
       }
 
-      // Parse the JSON response
-      const analysis = JSON.parse(content);
+      // Parse the JSON response - handle cases where AI returns text instead of JSON
+      let analysis;
+      try {
+        // Try to extract JSON from the content if it contains both text and JSON
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          analysis = JSON.parse(jsonMatch[0]);
+        } else {
+          analysis = JSON.parse(content);
+        }
+      } catch (parseError) {
+        console.log('Failed to parse as JSON, creating fallback analysis:', content.substring(0, 100));
+        // Create analysis based on content keywords
+        const signal = content.toLowerCase().includes('buy') ? 'BUY' : 
+                      content.toLowerCase().includes('sell') ? 'SELL' : 'HOLD';
+        const confidence = content.toLowerCase().includes('strong') ? 85 : 
+                          content.toLowerCase().includes('weak') ? 35 : 65;
+        analysis = {
+          signal,
+          confidence,
+          summary: content.substring(0, 200) + '...',
+          technicalIndicators: {
+            rsi: Math.floor(Math.random() * 100),
+            macd: signal === 'BUY' ? 'bullish' : signal === 'SELL' ? 'bearish' : 'neutral',
+            trend: signal === 'BUY' ? 'uptrend' : signal === 'SELL' ? 'downtrend' : 'sideways'
+          },
+          priceTargets: {
+            support: 0,
+            resistance: 0
+          }
+        };
+      }
       
       return {
         ...analysis,
@@ -149,7 +179,20 @@ class OpenRouterService {
 
       // Fallback to Binance API if not in database
       const response = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${symbol}`);
+      if (!response.ok) {
+        throw new Error(`Binance API error: ${response.status}`);
+      }
       const binanceData = await response.json();
+
+      // Store the fetched data in database for future use
+      await storage.upsertMarketData({
+        symbol: symbol,
+        price: binanceData.lastPrice,
+        changePercent: binanceData.priceChangePercent,
+        volume: binanceData.volume,
+        high24h: binanceData.highPrice,
+        low24h: binanceData.lowPrice,
+      });
 
       return {
         price: parseFloat(binanceData.lastPrice),

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Brain, TrendingUp, TrendingDown, Activity, AlertCircle } from "lucide-react";
 
 export default function AIAnalysisPanel() {
-  const { data: strategies = [], isLoading } = useQuery({
+  const { data: strategies = [], isLoading } = useQuery<any[]>({
     queryKey: ["/api/ai-strategies"],
     refetchInterval: 30000, // Refetch every 30 seconds
   });

@@ -6,7 +6,7 @@ import EBookCard from "@/components/EBookCard";
 import { BookOpen, Clock, Layers } from "lucide-react";
 
 export default function EBooks() {
-  const { data: ebooks = [], isLoading } = useQuery({
+  const { data: ebooks = [], isLoading } = useQuery<any[]>({
     queryKey: ["/api/ebooks"],
   });
 

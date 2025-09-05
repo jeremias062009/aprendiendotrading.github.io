@@ -7,7 +7,7 @@ import { Video, ExternalLink, Users, Shield } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Tutorials() {
-  const { data: tutorials = [], isLoading } = useQuery({
+  const { data: tutorials = [], isLoading } = useQuery<any[]>({
     queryKey: ["/api/tutorials"],
   });
 

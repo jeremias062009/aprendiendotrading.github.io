@@ -13,7 +13,7 @@ export default function AIStrategies() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
-  const { data: strategies = [], isLoading } = useQuery({
+  const { data: strategies = [], isLoading } = useQuery<any[]>({
     queryKey: ["/api/ai-strategies"],
     refetchInterval: 60000, // Refetch every minute
   });
